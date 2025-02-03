@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../domain/user.domain';
 import { CreateUserInput } from '../domain/user.types';
 import { UserRepository } from '../infrastructure/user.repository';
@@ -6,52 +6,66 @@ import { AppLogger } from 'src/shared/logger/logger.service';
 
 @Injectable()
 export class UsersService {
-    private readonly logger: AppLogger= new AppLogger().withCtx(UsersService.name)
-    constructor(private readonly userRepository: UserRepository, 
-    ) {
-    }
-
+    private readonly logger: AppLogger = new AppLogger().withCtx(UsersService.name);
+    constructor(private readonly userRepository: UserRepository) {}
 
     async create(input: CreateUserInput): Promise<User> {
-            const email = input.email.toLowerCase();
-            const existingUser = await this.userRepository.getByEmail(email);
-    
-            if (existingUser) {
-                this.logger.error(`User with email ${email} already exists.`);  
-                throw new ConflictException('User with this email already exists'); 
-            }
-    
-            const newUser = new User(
-                null, 
-                input.firstName,
-                input.lastName,
-                email,
-                new Date(), 
-                new Date()  
-            );
-    
-            await this.userRepository.save(newUser);
-    
-            return newUser;
-       
+        const email = input.email.toLowerCase();
+        const existingUser = await this.userRepository.getByEmail(email);
+
+        if (existingUser) {
+            this.logger.error(`User with email ${email} already exists.`);
+            throw new ConflictException('User with this email already exists');
+        }
+
+        const newUser = new User(
+            null,
+            input.firstName,
+            input.lastName,
+            email,
+            new Date(),
+            new Date(),
+        );
+
+        await this.userRepository.save(newUser);
+
+        return newUser;
     }
-    
 
     async get(email: string): Promise<User | Error> {
-            const user = await this.userRepository.getByEmail(email);
+        const user = await this.userRepository.getByEmail(email);
 
-            if (!user) {
-                this.logger.error(`User with email ${email} dont exist.`);
-                throw new Error(`User with email ${email} dont exist.`);
-            }
-        
+        if (!user) {
+            this.logger.error(`User with email ${email} dont exist.`);
+            throw new Error(`User with email ${email} dont exist.`);
+        }
 
-            await this.userRepository.save(user);
-            
-            return user;
+        await this.userRepository.save(user);
+
+        return user;
     }
 
-    async getAll(): Promise<User[] > {
+    async getById(id: string): Promise<User | Error> {
+        const user = await this.userRepository.getById(id);
+
+        if (!user) {
+            this.logger.error(`User with id ${id} dont exist.`);
+            throw new NotFoundException(`User with id ${id} dont exist.`);
+        }
+
+        return user;
+    }
+
+    async getUsers(ids: string[]): Promise<User[]> {
+        const users = await this.userRepository.getByIds(ids);
+        if (Array.isArray(users) && users.length === 0) {
+            this.logger.error(`Users with id ${ids} dont exist.`);
+            throw new NotFoundException(`User with id ${ids} dont exist.`);
+        }
+        return users;
+    }
+
+    async getAll(): Promise<User[]> {
         const users = await this.userRepository.getUsersWithCustomFilter(null);
 
         if (users.length === 0) {
@@ -60,5 +74,5 @@ export class UsersService {
         }
 
         return users;
-}
+    }
 }

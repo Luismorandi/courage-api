@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../domain/user.domain';
 import { UserEntity } from './user.entity';
@@ -25,12 +25,32 @@ export class UserRepository {
         }
     }
 
+    async getById(id: string): Promise<User | null> {
+        try {
+            const user = await this.userRepository.findOne({ where: { id } });
+            return user ? this.toDomain(user) : null;
+        } catch (err) {
+            throw new Error(`Failed to fetch user by email: ${(err as Error).message}`);
+        }
+    }
+
+    async getByIds(ids: string[]): Promise<User[]> {
+        try {
+            const users = await this.userRepository.find({ where: { id: In(ids) } });
+            return users ? users.map((user) => this.toDomain(user)) : [];
+        } catch (err) {
+            throw new Error(`Failed to fetch users by ids: ${(err as Error).message}`);
+        }
+    }
+
     async getUsersWithCustomFilter(filters: any): Promise<User[]> {
         try {
             const queryBuilder = this.userRepository.createQueryBuilder('user_entity');
 
             if (filters?.name) {
-                queryBuilder.andWhere('user_entity.name LIKE :name', { name: `%${filters.name}%` });
+                queryBuilder.andWhere('user_entity.name LIKE :name', {
+                    name: `%${filters.name}%`,
+                });
             }
 
             if (filters?.email) {
@@ -39,15 +59,16 @@ export class UserRepository {
                 });
             }
 
-
-          const users= await queryBuilder.getMany();
-          return users.map(user => this.toDomain(user));
+            const users = await queryBuilder.getMany();
+            return users.map((user) => this.toDomain(user));
         } catch (err) {
-            throw new Error(`Failed to fetch users with filters: ${(err as Error).message}`);
+            throw new Error(
+                `Failed to fetch users with filters: ${(err as Error).message}`,
+            );
         }
     }
 
-    async save(user: User): Promise<null|Error> {
+    async save(user: User): Promise<null | Error> {
         try {
             const userRepository = this.fromDomain(user);
             await this.userRepository.save(userRepository);
@@ -75,7 +96,6 @@ export class UserRepository {
     private fromDomain(user: User): UserEntity {
         try {
             const id = user.id ? user.id : randomUUID();
-            console.log(id)
             return {
                 id: id,
                 email: user.email,
