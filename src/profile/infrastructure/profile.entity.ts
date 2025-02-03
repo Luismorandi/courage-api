@@ -19,4 +19,7 @@ export class ProfileEntity {
     updated_at: Date;
     @Column()
     type: string;
+
+    @Column()
+    gender: string;
 }
