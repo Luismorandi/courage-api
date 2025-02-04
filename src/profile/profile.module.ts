@@ -8,6 +8,8 @@ import { HttpModule } from '@nestjs/axios';
 import { UserRestRepository } from './infrastructure/rest/user.rest.repository';
 import { GetManyProfileController } from './application/controllers/profile.getMany';
 import { GetManyProfileUseCase } from './application/useCases/profile.getMany';
+import { GetByFilterProfileUseCase } from './application/useCases/profile.getByFilter';
+import { GetByFilterController } from './application/controllers/profule.getByFilter';
 
 @Module({
     imports: [
@@ -20,9 +22,14 @@ import { GetManyProfileUseCase } from './application/useCases/profile.getMany';
     providers: [
         CreateProfileUseCase,
         GetManyProfileUseCase,
+        GetByFilterProfileUseCase,
         ProfilePostgreRepository,
         UserRestRepository,
     ],
-    controllers: [CreateProfileController, GetManyProfileController],
+    controllers: [
+        CreateProfileController,
+        GetManyProfileController,
+        GetByFilterController,
+    ],
 })
 export class ProfileModule {}

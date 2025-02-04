@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from '../domain/profile/profile.domain';
 import { ProfileEntity } from './profile.entity';
 import { randomUUID } from 'crypto';
-import { IProfileRepository } from '../domain/profile/profile.repository';
+import { FilterProfile, IProfileRepository } from '../domain/profile/profile.repository';
 import { ProfileRole } from '../domain/profile/profile.roles';
 import { ProfileStatus } from '../domain/profile/profile.status';
 import { ProfileTypes } from '../domain/profile/profile.types';
@@ -35,6 +35,36 @@ export class ProfilePostgreRepository implements IProfileRepository {
             return profiles ? profiles.map((user) => this.toDomain(user)) : [];
         } catch (err) {
             throw new Error(`Failed to save user: ${(err as Error).message}`);
+        }
+    }
+
+    async getByFilter(filters: FilterProfile): Promise<Profile[]> {
+        try {
+            const where: any = {};
+
+            if (filters.status) {
+                where.status = filters.status;
+            }
+
+            if (filters.type) {
+                where.type = filters.type;
+            }
+
+            if (filters.gender && filters.gender.length > 0) {
+                where.gender = In(filters.gender);
+            }
+
+            if (filters.role) {
+                where.role = filters.role;
+            }
+
+            const profiles = await this.profileRepository.find({
+                where,
+            });
+
+            return profiles ? profiles.map((profile) => this.toDomain(profile)) : [];
+        } catch (err) {
+            throw new Error(`Failed to get profiles: ${(err as Error).message}`);
         }
     }
 

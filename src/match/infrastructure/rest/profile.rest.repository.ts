@@ -3,7 +3,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { IProfile } from 'src/match/domain/profile/profile.domain';
-import { IProfileRepository } from 'src/match/domain/profile/profile.repository';
+import {
+    FilterProfile,
+    IProfileRepository,
+} from 'src/match/domain/profile/profile.repository';
 import { AppLogger } from 'src/shared/logger/logger.service';
 
 @Injectable()
@@ -26,6 +29,21 @@ export class ProfileRestRepository implements IProfileRepository {
 
             const response = await firstValueFrom(
                 this.httpService.get(`${this.getUrl()}/profile/many?ids=${idsParams}`),
+            );
+
+            return response.data;
+        } catch (err) {
+            this.logger.error(`Failed to get profiles: ${(err as Error).message}`);
+            throw new BadRequestException(
+                `Failed to get profiles: ${(err as Error).message}`,
+            );
+        }
+    }
+
+    async getProfileByFilter(filter: FilterProfile): Promise<IProfile[]> {
+        try {
+            const response = await firstValueFrom(
+                this.httpService.post(`${this.getUrl()}/profile/filter`, filter),
             );
 
             return response.data;

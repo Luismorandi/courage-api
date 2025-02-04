@@ -7,6 +7,8 @@ import { CreateMatchUseCase } from './application/useCases/match.create';
 import { MatchPostgreRepository } from './infrastructure/match.postgre.repository';
 import { CreateMatchController } from './application/controllers/match.create';
 import { ProfileRestRepository } from './infrastructure/rest/profile.rest.repository';
+import { FinderPosibleMatchUseCase } from './application/useCases/match.finder';
+import { FinderPosibleMatchController } from './application/controllers/match.finderPosibleMatch';
 
 @Module({
     imports: [
@@ -16,7 +18,12 @@ import { ProfileRestRepository } from './infrastructure/rest/profile.rest.reposi
             maxRedirects: 5,
         }),
     ],
-    providers: [CreateMatchUseCase, MatchPostgreRepository, ProfileRestRepository],
-    controllers: [CreateMatchController],
+    providers: [
+        CreateMatchUseCase,
+        FinderPosibleMatchUseCase,
+        MatchPostgreRepository,
+        ProfileRestRepository,
+    ],
+    controllers: [CreateMatchController, FinderPosibleMatchController],
 })
 export class MatchModule {}
