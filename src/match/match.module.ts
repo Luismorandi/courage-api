@@ -9,6 +9,7 @@ import { CreateMatchController } from './application/controllers/match.create';
 import { ProfileRestRepository } from './infrastructure/rest/profile.rest.repository';
 import { FinderPosibleMatchUseCase } from './application/useCases/match.finder';
 import { FinderPosibleMatchController } from './application/controllers/match.finderPosibleMatch';
+import { AI } from './infrastructure/rest/ai.rest.respository';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { FinderPosibleMatchController } from './application/controllers/match.fi
         FinderPosibleMatchUseCase,
         MatchPostgreRepository,
         ProfileRestRepository,
+        AI,
     ],
     controllers: [CreateMatchController, FinderPosibleMatchController],
 })

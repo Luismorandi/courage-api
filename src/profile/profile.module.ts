@@ -10,10 +10,11 @@ import { GetManyProfileController } from './application/controllers/profile.getM
 import { GetManyProfileUseCase } from './application/useCases/profile.getMany';
 import { GetByFilterProfileUseCase } from './application/useCases/profile.getByFilter';
 import { GetByFilterController } from './application/controllers/profule.getByFilter';
+import { ProfileDetailsEntity } from './infrastructure/profileDetails.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ProfileEntity]),
+        TypeOrmModule.forFeature([ProfileEntity, ProfileDetailsEntity]),
         HttpModule.register({
             timeout: 500000000,
             maxRedirects: 5,

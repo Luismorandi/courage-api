@@ -10,6 +10,7 @@ import { ProfileModule } from './profile/profile.module';
 import { ProfileEntity } from './profile/infrastructure/profile.entity';
 import { MatchEntity } from './match/infrastructure/match.entity';
 import { MatchModule } from './match/match.module';
+import { ProfileDetailsEntity } from './profile/infrastructure/profileDetails.entity';
 
 @Module({
     imports: [
@@ -24,7 +25,7 @@ import { MatchModule } from './match/match.module';
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
-            entities: [UserEntity, ProfileEntity, MatchEntity],
+            entities: [UserEntity, ProfileEntity, MatchEntity, ProfileDetailsEntity],
             synchronize: true,
         }),
         UsersModule,

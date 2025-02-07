@@ -2,8 +2,8 @@ import { BadRequestException } from '@nestjs/common';
 import { Gender } from '../match/gender.domain';
 import { IProfile } from '../profile/profile.domain';
 import { IProfileRepository } from '../profile/profile.repository';
+import { IAI } from 'src/match/infrastructure/rest/ai.rest.respository';
 
-/** Clase base para estrategias de búsqueda */
 export abstract class Finder {
     protected args: Record<string, any>;
 
@@ -59,6 +59,49 @@ export class GenderStrategy extends Finder {
     }
 }
 
+export class AIStrategy extends Finder {
+    async find(): Promise<IProfile[]> {
+        try {
+            const profileRepo = this.getArg<IProfileRepository>('profileRepo');
+            const AI = this.getArg<IAI>('aiRepo');
+
+            const profiles = await profileRepo.getProfileByFilter({});
+            const criterio = 'género: FEMALE, suscripción: BASIC, role: ADMIN';
+
+            const prompt = `
+            ### INSTRUCCIONES IMPORTANTES:
+            Eres un experto en selección de perfiles. 
+            Tu tarea es devolver únicamente los índices de los perfiles que coincidan con los siguientes criterios:
+            - ${criterio}
+            - No añadas ningún texto adicional.
+            
+            Lista de perfiles:
+            ${profiles.map((p, i) => `${i}, genero: ${p.gender}, subscripcion: ${p.type}, role:${p.role}`).join('\n')}
+            
+            Solo responde con los índices, separados por comas.  
+            Ejemplo de respuesta:  
+            19,26,27
+            `;
+
+            const response = await AI.getResponse(prompt, 0.5);
+            console.log(response);
+
+            const indicesSeleccionados = response
+                ?.split(',')
+                .map((index: string) => parseInt(index.trim(), 10))
+                .filter(
+                    (num: number) => !isNaN(num) && num >= 0 && num < profiles.length,
+                );
+
+            return indicesSeleccionados.map((index: number) => profiles[index]);
+        } catch (error) {
+            throw new Error(
+                `Error en la estrategia 'AIStrategy': ${(error as Error).message}`,
+            );
+        }
+    }
+}
+
 /** Contexto que maneja la estrategia actual */
 export class ContextFinder {
     private finderStrategy?: Finder;
@@ -85,10 +128,15 @@ export class ContextFinder {
 export class FactoryStrategy {
     private strategies: Map<string, Finder> = new Map();
 
-    constructor(profileRepo: IProfileRepository, args: Record<string, any> = {}) {
+    constructor(
+        profileRepo: IProfileRepository,
+        aiRepo: IAI,
+        args: Record<string, any> = {},
+    ) {
         try {
             this.strategies.set('all', new AllStrategy({ profileRepo }));
             this.strategies.set('gender', new GenderStrategy({ profileRepo, ...args }));
+            this.strategies.set('ai', new AIStrategy({ profileRepo, aiRepo, ...args }));
         } catch (error) {
             throw new Error(
                 `Error al inicializar FactoryStrategy:${(error as Error).message}`,

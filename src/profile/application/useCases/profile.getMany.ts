@@ -13,6 +13,7 @@ export class GetManyProfileUseCase {
 
     async exec(ids: string[]): Promise<Profile[]> {
         const profiles = await this.profileRepository.getMany(ids);
+        console.log(profiles);
         if (Array.isArray(profiles) && profiles.length === 0) {
             this.logger.error(`Profiles with id ${ids} dont exist.`);
             throw new NotFoundException(`Profiles with id ${ids} dont exist.`);

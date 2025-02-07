@@ -9,21 +9,58 @@ import { ProfileRole } from '../domain/profile/profile.roles';
 import { ProfileStatus } from '../domain/profile/profile.status';
 import { ProfileTypes } from '../domain/profile/profile.types';
 import { Gender } from '../domain/profile/profile.gender';
+import { ProfileDetails } from '../domain/profileDetails/profileDetails';
+import { Details } from '../domain/profileDetails/details';
+import { ProfileDetailsEntity } from './profileDetails.entity';
 
 @Injectable()
 export class ProfilePostgreRepository implements IProfileRepository {
     constructor(
         @InjectRepository(ProfileEntity)
         private readonly profileRepository: Repository<ProfileEntity>,
+
+        @InjectRepository(ProfileDetailsEntity)
+        private readonly profileDetailsRepository: Repository<ProfileDetailsEntity>,
     ) {}
 
     async save(profile: Profile): Promise<Profile | Error> {
         try {
             const profileRepository = this.fromDomain(profile);
             await this.profileRepository.save(profileRepository);
+            if (profile.getDetails()) {
+                await this.saveProfileDetails(profile, profileRepository.id);
+            }
             return profile;
         } catch (err) {
             throw new Error(`Failed to save user: ${(err as Error).message}`);
+        }
+    }
+
+    async saveProfileDetails(profile: Profile, id?: string): Promise<null> {
+        try {
+            if (!profile.getDetails()) {
+                return null;
+            }
+
+            const details = profile.getDetails() as Record<string, string>; // Asumiendo que 'details' es un Record
+            const idProfile = profile.getId() ?? id;
+
+            // Convertir el Record en un array de ProfileDetailsEntity
+            const profileDetailsToRepo: ProfileDetailsEntity[] = Object.entries(
+                details,
+            ).map(([key, value]) => ({
+                id: randomUUID(),
+                key: key,
+                value: value,
+                profile_id: idProfile as string,
+                status: 'ACTIVE',
+                created_at: new Date(),
+                updated_at: new Date(),
+            }));
+            await this.profileDetailsRepository.save(profileDetailsToRepo);
+            return null;
+        } catch (err) {
+            throw new Error(`Failed to save profile details: ${(err as Error).message}`);
         }
     }
 
@@ -32,7 +69,20 @@ export class ProfilePostgreRepository implements IProfileRepository {
             const profiles = await this.profileRepository.find({
                 where: { id: In(ids) },
             });
-            return profiles ? profiles.map((user) => this.toDomain(user)) : [];
+            const profileDetails = await this.profileDetailsRepository.find({
+                where: { profile_id: In(ids) },
+            });
+
+            console.log(profileDetails);
+            return profiles.map((profile) => {
+                const detailsForProfile = profileDetails.filter(
+                    (detail) => detail.profile_id === profile.id,
+                );
+
+                const profileWithDetails = this.toDomain(profile, detailsForProfile);
+
+                return profileWithDetails;
+            });
         } catch (err) {
             throw new Error(`Failed to save user: ${(err as Error).message}`);
         }
@@ -80,6 +130,7 @@ export class ProfilePostgreRepository implements IProfileRepository {
                 updated_at: profile.getUpdatedAt(),
                 status: profile.getStatus(),
                 gender: profile.getGender(),
+                age: profile.getAge(),
             };
         } catch (err) {
             throw new Error(
@@ -88,7 +139,23 @@ export class ProfilePostgreRepository implements IProfileRepository {
         }
     }
 
-    private toDomain(profile: ProfileEntity): Profile {
+    private toDomain(
+        profile: ProfileEntity,
+        profileDetailsEntity?: ProfileDetailsEntity[],
+    ): Profile {
+        // Definir profileMap como Record<Details, string>
+        let profileMap: Record<Details, string> = {} as Record<Details, string>;
+
+        if (profileDetailsEntity && profileDetailsEntity.length > 0) {
+            profileDetailsEntity.forEach((details: ProfileDetailsEntity) => {
+                // Asumiendo que 'details.key' es de tipo 'Details'
+                profileMap[details.key as Details] = details.value;
+            });
+        }
+
+        const profileDetails = new ProfileDetails([], profileMap); // Usar Record<Details, string>
+        console.log(profileDetails);
+
         try {
             return new Profile({
                 id: profile.id,
@@ -99,6 +166,9 @@ export class ProfilePostgreRepository implements IProfileRepository {
                 updatedAt: profile.updated_at,
                 type: profile.type as ProfileTypes,
                 gender: profile.gender as Gender,
+                age: profile.age,
+                photos: [],
+                details: profileDetails.getDetails(),
             });
         } catch (err) {
             throw new Error(`Failed to map entity to domain: ${(err as Error).message}`);
