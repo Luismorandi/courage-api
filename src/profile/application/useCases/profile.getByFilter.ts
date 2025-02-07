@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { Profile } from '../../domain/profile/profile.domain';
 
-import { ProfilePostgreRepository } from 'src/profile/infrastructure/profile.postgre.repository';
+import { ProfilePostgreRepository } from 'src/profile/infrastructure/postgre/profile.postgre.repository';
 import { FilterProfile } from 'src/profile/domain/profile/profile.repository';
 
 @Injectable()

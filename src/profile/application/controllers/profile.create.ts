@@ -5,11 +5,11 @@ import { CreateProfileInput } from '../../domain/profile.dto';
 
 @Controller('profile/create')
 export class CreateProfileController {
-    constructor(private readonly profile: CreateProfileUseCase) {}
+    constructor(private readonly createProfileUseCase: CreateProfileUseCase) {}
 
     @Post('')
     async createProfile(@Body() input: CreateProfileInput): Promise<Profile> {
-        const newProfile = await this.profile.create(input);
+        const newProfile = await this.createProfileUseCase.exec(input);
         return newProfile;
     }
 }

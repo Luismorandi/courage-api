@@ -8,7 +8,6 @@ export interface IAI {
 @Injectable()
 export class AI implements IAI {
     async getResponse(prompt: string, creativity: number): Promise<any> {
-        console.log('opase');
         return await getResponseAI(prompt, creativity);
     }
 }

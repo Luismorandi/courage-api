@@ -1,17 +1,43 @@
+import {
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsString,
+} from 'class-validator';
 import { Gender } from './profile/profile.gender';
 import { ProfileRole } from './profile/profile.roles';
 import { ProfileStatus } from './profile/profile.status';
 import { ProfileTypes } from './profile/profile.types';
 import { Details } from './profileDetails/details';
 
-export interface CreateProfileInput {
+export class CreateProfileInput {
+    @IsEnum(ProfileTypes, { message: 'Invalid type' })
     type: string;
+
+    @IsEnum(ProfileStatus, { message: 'Invalid status' })
     status: string;
+
+    @IsEnum(ProfileRole, { message: 'Invalid role' })
     role: string;
+
+    @IsString()
+    @IsNotEmpty()
     userId: string;
+
+    @IsEnum(Gender, { message: 'Invalid gender' })
     gender: string;
-    profileDetails: Record<Details, string>;
+
+    @IsObject()
+    @IsOptional()
+    profileDetails: Record<string, string>;
+
+    @IsNumber()
     age: number;
+
+    @IsOptional()
+    photos: string[];
 }
 
 export interface INewProfile {

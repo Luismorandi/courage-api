@@ -84,7 +84,6 @@ export class AIStrategy extends Finder {
             `;
 
             const response = await AI.getResponse(prompt, 0.5);
-            console.log(response);
 
             const indicesSeleccionados = response
                 ?.split(',')

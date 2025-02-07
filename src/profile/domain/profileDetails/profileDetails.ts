@@ -1,15 +1,9 @@
 import { Details } from './details';
 
 export class ProfileDetails {
-    private photos: string[];
     private details: Record<Details, string>;
-    constructor(photos: string[], details: Record<Details, string>) {
-        this.photos = photos;
+    constructor(details: Record<Details, string>) {
         this.details = details;
-    }
-
-    getPhotos(): string[] {
-        return this.photos;
     }
 
     getDetails(): Record<Details, string> {
