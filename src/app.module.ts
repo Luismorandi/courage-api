@@ -12,6 +12,8 @@ import { MatchEntity } from './match/infrastructure/match.entity';
 import { MatchModule } from './match/match.module';
 import { ProfileDetailsEntity } from './profile/infrastructure/postgre/profileDetails/profileDetails.entity';
 import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePhotos/profilePhotos.entity';
+import { MessageEntity } from './chat/infrastructure/postgre/message/message.entity';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
     imports: [
@@ -32,6 +34,7 @@ import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePho
                 MatchEntity,
                 ProfileDetailsEntity,
                 ProfilePhotosEntity,
+                MessageEntity,
             ],
             synchronize: true,
         }),
@@ -39,6 +42,7 @@ import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePho
         SharedModule,
         ProfileModule,
         MatchModule,
+        ChatModule,
     ],
     controllers: [AppController],
     providers: [AppService],

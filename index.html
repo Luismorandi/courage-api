@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat WebSocket</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Sección de configuración inicial -->
+        <div id="join-section" class="border-t p-3 text-center">
+            <label class="block text-sm font-semibold">Tu ID:</label>
+            <input id="senderId" value="user1" class="text-center w-full border rounded-lg p-1 mb-2">
+            <label class="block text-sm font-semibold">ID del receptor:</label>
+            <input id="receiverId" value="user2" class="text-center w-full border rounded-lg p-1 mb-2">
+            <button onclick="joinRoom()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Unirse al Chat</button>
+        </div>
+
+        <!-- Sección del chat, inicialmente oculta -->
+        <div id="chat-container" class="hidden">
+            <div class="bg-blue-600 text-white text-center py-3">
+                <h2 class="text-lg font-semibold">Chat en Tiempo Real</h2>
+            </div>
+
+            <div id="chat-box" class="h-80 p-4 overflow-y-auto space-y-2"></div>
+
+            <div class="border-t p-3 flex items-center">
+                <input id="message" type="text" class="flex-1 px-3 py-2 border rounded-lg focus:outline-none" placeholder="Escribe un mensaje..." onkeyup="handleEnter(event)">
+                <button onclick="sendMessage()" class="ml-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io("http://localhost:3000");
+
+        // Función para unirse a la sala y obtener los mensajes previos
+        function joinRoom() {
+            const senderId = document.getElementById("senderId").value;
+            const receiverId = document.getElementById("receiverId").value;
+
+            // Emitir evento para unirse a la sala
+            socket.emit("joinRoom", { senderId, receiverId });
+
+            // Manejar el evento 'previousMessages' que el servidor emite
+            socket.on("previousMessages", (messages) => {
+                const chatBox = document.getElementById("chat-box");
+                // Formatear y mostrar los mensajes previos
+                const messageOrder = messages.sort((a,b)=> new Date(a.createdAt)- new Date(b.createdAt))
+                chatBox.innerHTML = messageOrder.map(msg => formatMessage(msg.senderId, msg.content)).join("");
+                scrollToBottom();
+            });
+
+            // Ocultar sección de configuración y mostrar el chat
+            document.getElementById("join-section").style.display = "none";
+            document.getElementById("chat-container").style.display = "block";
+        }
+
+        // Escuchar el evento 'receiveMessage' para nuevos mensajes en tiempo real
+        socket.on("receiveMessage", (msg) => {
+            document.getElementById("chat-box").innerHTML += formatMessage(msg.senderId, msg.content);
+            scrollToBottom();
+        });
+
+        // Función para enviar un mensaje
+        function sendMessage() {
+            const senderId = document.getElementById("senderId").value;
+            const receiverId = document.getElementById("receiverId").value;
+            const content = document.getElementById("message").value.trim();
+
+            if (!content) return;
+
+            socket.emit("sendMessage", { senderId, receiverId, content });
+
+            document.getElementById("message").value = "";
+        }
+
+        // Función para formatear el mensaje
+        function formatMessage(sender, text) {
+            const currentUser = document.getElementById("senderId").value;
+            const isMyMessage = sender === currentUser;
+
+            return `
+                <div class="flex ${isMyMessage ? "justify-end" : "justify-start"}">
+                    <div class="px-4 py-2 rounded-lg ${isMyMessage ? "bg-blue-500 text-white" : "bg-gray-200"} max-w-xs">
+                        <span class="text-xs font-semibold ${isMyMessage ? "text-white" : "text-gray-700"}">${sender}</span>
+                        <p>${text}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para hacer scroll hasta el final del chat
+        function scrollToBottom() {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Función para enviar el mensaje al presionar Enter
+        function handleEnter(event) {
+            if (event.key === "Enter") sendMessage();
+        }
+    </script>
+</body>
+</html>
