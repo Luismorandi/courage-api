@@ -1,16 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AppLogger } from 'src/shared/logger/logger.service';
-import { Profile } from '../../domain/profile/profile.domain';
-
-import { ProfilePostgreRepository } from 'src/profile/infrastructure/postgre/profile.postgre.repository';
-import { FilterProfile } from 'src/profile/domain/profile/profile.repository';
+import { FilterProfile } from 'src/profile/domain/profileInfo/profileInfo.repository';
+import { Profile } from 'src/profile/domain/profile/profile.domain';
+import { ProfileRepositoryService } from 'src/profile/infrastructure/profile.repository';
 
 @Injectable()
 export class GetByFilterProfileUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(
         GetByFilterProfileUseCase.name,
     );
-    constructor(private readonly profileRepository: ProfilePostgreRepository) {}
+    constructor(private readonly profileRepository: ProfileRepositoryService) {}
 
     async exec(input: FilterProfile): Promise<Profile[]> {
         const profiles = await this.profileRepository.getByFilter(input);

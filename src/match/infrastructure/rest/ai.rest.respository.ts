@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { getResponseAI } from 'src/match/config/deepseek';
+import { getResponseAI } from 'src/match/common/config/deepseek';
 
 export interface IAI {
     getResponse(prompt: string, creativity: number): Promise<any>;

@@ -1,4 +1,4 @@
-import { MessageStatus } from 'src/chat/domain/messageStatus';
+import { MessageStatus } from 'src/chat/domain/message/messageStatus';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()

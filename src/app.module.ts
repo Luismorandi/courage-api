@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SharedModule } from './shared/shared.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProfileEntity } from './profile/infrastructure/postgre/profile/profile.entity';
-import { MatchEntity } from './match/infrastructure/match.entity';
+import { MatchEntity } from './match/infrastructure/postgre/match/match.entity';
 import { MatchModule } from './match/match.module';
 import { ProfileDetailsEntity } from './profile/infrastructure/postgre/profileDetails/profileDetails.entity';
 import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePhotos/profilePhotos.entity';

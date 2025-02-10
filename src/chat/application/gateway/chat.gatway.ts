@@ -6,9 +6,9 @@ import {
     ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { CreateMessageUseCase } from '../useCase/message.create';
-import { GetMessagesUseCase } from '../useCase/message.getMany';
-import { CreateMessageInput } from 'src/chat/domain/message.dto';
+import { CreateMessageUseCase } from '../useCase/message/message.create';
+import { GetMessagesUseCase } from '../useCase/message/message.getMany';
+import { CreateMessageInput } from 'src/chat/domain/message/message.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Permitir conexiones de cualquier origen
 export class ChatGateway {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { GetMessagesInput } from 'src/chat/domain/message.dto';
-import { Message } from 'src/chat/domain/message';
+import { GetMessagesInput } from 'src/chat/domain/message/message.dto';
+import { Message } from 'src/chat/domain/message/message';
 import { MessagePostgreRepository } from 'src/chat/infrastructure/postgre/message/message.repository';
 
 @Injectable()

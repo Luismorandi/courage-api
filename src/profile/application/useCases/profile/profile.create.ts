@@ -1,20 +1,18 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateProfileInput } from '../../domain/profile.dto';
+import { CreateProfileInput } from '../../../domain/profileInfo/profileInfo.dto';
 import { AppLogger } from 'src/shared/logger/logger.service';
-import { Profile } from '../../domain/profile/profile.domain';
-
-import { ProfilePostgreRepository } from 'src/profile/infrastructure/postgre/profile.postgre.repository';
 import { UserRestRepository } from 'src/profile/infrastructure/rest/user.rest.repository';
-import { ProfileFactory } from 'src/profile/common/profile.factory';
+import { ProfileRepositoryService } from 'src/profile/infrastructure/profile.repository';
+import { Profile } from 'src/profile/domain/profile/profile.domain';
 
 @Injectable()
 export class CreateProfileUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(
         CreateProfileUseCase.name,
     );
-    private readonly profileFactory: ProfileFactory = new ProfileFactory();
     constructor(
-        private readonly profileRepository: ProfilePostgreRepository,
+        private readonly profileRepositoryService: ProfileRepositoryService,
+
         private readonly userService: UserRestRepository,
     ) {}
 
@@ -25,10 +23,12 @@ export class CreateProfileUseCase {
             throw new ConflictException(`User with id ${input.userId} dont exist.`);
         }
 
-        const newProfile = this.profileFactory.createProfile(input);
+        const profile = await this.profileRepositoryService.create(input);
+        if (profile instanceof Error) {
+            this.logger.error(profile.message);
+            throw new Error(profile.message);
+        }
 
-        await this.profileRepository.save(newProfile);
-
-        return newProfile;
+        return profile;
     }
 }

@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
-import { CreateProfileUseCase } from './application/useCases/profile.create';
+import { CreateProfileUseCase } from './application/useCases/profile/profile.create';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileEntity } from './infrastructure/postgre/profile/profile.entity';
-import { ProfilePostgreRepository } from './infrastructure/postgre/profile.postgre.repository';
-import { CreateProfileController } from './application/controllers/profile.create';
+import { ProfilePostgreRepository } from './infrastructure/postgre/profile/profile.postgre.repository';
+import { CreateProfileController } from './application/controllers/profile/profile.create';
 import { HttpModule } from '@nestjs/axios';
 import { UserRestRepository } from './infrastructure/rest/user.rest.repository';
-import { GetManyProfileController } from './application/controllers/profile.getMany';
-import { GetManyProfileUseCase } from './application/useCases/profile.getMany';
-import { GetByFilterProfileUseCase } from './application/useCases/profile.getByFilter';
-import { GetByFilterController } from './application/controllers/profule.getByFilter';
+import { GetManyProfileController } from './application/controllers/profile/profile.getMany';
+import { GetManyProfileUseCase } from './application/useCases/profile/profile.getMany';
+import { GetByFilterProfileUseCase } from './application/useCases/profile/profile.getByFilter';
+import { GetByFilterController } from './application/controllers/profile/profule.getByFilter';
 import { ProfileDetailsEntity } from './infrastructure/postgre/profileDetails/profileDetails.entity';
 import { ProfilePhotosEntity } from './infrastructure/postgre/profilePhotos/profilePhotos.entity';
-import { ProfileMapper } from './infrastructure/postgre/profile.mapper';
+import { ProfileMapper } from './infrastructure/postgre/profile/profile.mapper';
+import { ProfileDetailsMapper } from './infrastructure/postgre/profileDetails/profileDetails.mapper';
+import { ProfilePhotosMapper } from './infrastructure/postgre/profilePhotos/profilePhotos.mapper';
+import { ProfilePhotosPostgreRepository } from './infrastructure/postgre/profilePhotos/profilePhotos.repository';
+import { ProfileDetailsPostgreRepository } from './infrastructure/postgre/profileDetails/profileDetails.repository';
+import { ProfileRepositoryService } from './infrastructure/profile.repository';
 
 @Module({
     imports: [
@@ -33,6 +38,11 @@ import { ProfileMapper } from './infrastructure/postgre/profile.mapper';
         ProfilePostgreRepository,
         UserRestRepository,
         ProfileMapper,
+        ProfileDetailsMapper,
+        ProfilePhotosMapper,
+        ProfilePhotosPostgreRepository,
+        ProfileDetailsPostgreRepository,
+        ProfileRepositoryService,
     ],
     controllers: [
         CreateProfileController,

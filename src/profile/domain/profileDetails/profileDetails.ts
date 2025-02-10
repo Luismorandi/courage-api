@@ -15,4 +15,8 @@ export class ProfileDetails {
         if (!detailFound) throw new Error(`Detail ${detail} not found.`);
         return detailFound;
     }
+    setDetail(detail: string, value: string): void {
+        if (!Details.hasOwnProperty(detail)) return;
+        this.details[detail as Details] = value;
+    }
 }

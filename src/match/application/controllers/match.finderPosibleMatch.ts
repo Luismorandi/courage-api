@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { FinderPosibleMatchInput } from 'src/match/domain/match.dto';
-import { FinderPosibleMatchUseCase } from '../useCases/match.finder';
+import { FinderPosibleMatchUseCase } from '../useCases/match/match.finder';
 import { IProfile } from 'src/match/domain/profile/profile.domain';
 
 @Controller('match/finder')

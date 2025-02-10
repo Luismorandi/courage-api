@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { Profile } from '../../domain/profile/profile.domain';
-import { GetManyProfileUseCase } from '../useCases/profile.getMany';
+import { GetManyProfileUseCase } from '../../useCases/profile/profile.getMany';
+import { Profile } from 'src/profile/domain/profile/profile.domain';
 
 @Controller('profile/many')
 export class GetManyProfileController {

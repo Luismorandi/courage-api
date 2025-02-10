@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProfileInput } from '../domain/profile.dto';
-import { Profile } from '../domain/profile/profile.domain';
-import { ProfileRole } from '../domain/profile/profile.roles';
-import { ProfileTypes } from '../domain/profile/profile.types';
-import { Gender } from '../domain/profile/profile.gender';
-import { ProfileStatus } from '../domain/profile/profile.status';
+import { CreateProfile } from '../domain/profileInfo/profileInfo.dto';
+import { ProfileInfo } from '../domain/profileInfo/profileInfo.domain';
+import { ProfileRole } from '../domain/profileInfo/profileInfo.roles';
+import { ProfileTypes } from '../domain/profileInfo/profileInfo.types';
+import { Gender } from '../domain/profileInfo/profileInfo.gender';
+import { ProfileStatus } from '../domain/profileInfo/profileInfo.status';
 
 @Injectable()
 export class ProfileFactory {
-    createProfile(input: CreateProfileInput): Profile {
-        return new Profile({
+    createProfile(input: CreateProfile): ProfileInfo {
+        return new ProfileInfo({
+            id: input.id,
             userId: input.userId,
             role: input.role as ProfileRole,
             status: ProfileStatus.ACTIVE,

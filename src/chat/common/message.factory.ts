@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '../domain/message';
-import { CreateMessageInput } from '../domain/message.dto';
+import { Message } from '../domain/message/message';
+import { CreateMessageInput } from '../domain/message/message.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { Match } from '../../domain/match/match.domain';
-import { CreateMatchUseCase } from '../useCases/match.create';
+import { CreateMatchUseCase } from '../useCases/match/match.create';
 import { CreateMatchInput } from 'src/match/domain/match.dto';
 
 @Controller('match/create')

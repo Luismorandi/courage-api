@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MessageEntity } from './message.entity';
-import { IMessageRepository } from 'src/chat/domain/message.repository';
-import { Message } from 'src/chat/domain/message';
+import { IMessageRepository } from 'src/chat/domain/message/message.repository';
+import { Message } from 'src/chat/domain/message/message';
 import { MessageMapper } from './message.mapper';
 
 @Injectable()

@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MatchEntity } from './match.entity';
 import { randomUUID } from 'crypto';
-import { IMatchRepository } from '../domain/match/match.repository';
-import { Match } from '../domain/match/match.domain';
+import { IMatchRepository } from '../../../domain/match/match.repository';
+import { Match } from '../../../domain/match/match.domain';
 
 @Injectable()
 export class MatchPostgreRepository implements IMatchRepository {

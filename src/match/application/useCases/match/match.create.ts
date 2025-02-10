@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateMatchInput } from '../../domain/match.dto';
+import { CreateMatchInput } from '../../../domain/match.dto';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { Match } from 'src/match/domain/match/match.domain';
-import { MatchPostgreRepository } from 'src/match/infrastructure/match.postgre.repository';
+import { MatchPostgreRepository } from 'src/match/infrastructure/postgre/match/match.postgre.repository';
 import { MATCH_COUNT } from 'src/match/domain/match/matchCount.domain';
 import { ProfileRestRepository } from 'src/match/infrastructure/rest/profile.rest.repository';
 

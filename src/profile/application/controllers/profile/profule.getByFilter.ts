@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { Profile } from '../../domain/profile/profile.domain';
-import { FilterProfile } from 'src/profile/domain/profile/profile.repository';
-import { GetByFilterProfileUseCase } from '../useCases/profile.getByFilter';
+import { FilterProfile } from 'src/profile/domain/profileInfo/profileInfo.repository';
+import { GetByFilterProfileUseCase } from '../../useCases/profile/profile.getByFilter';
+import { Profile } from 'src/profile/domain/profile/profile.domain';
 
 @Controller('profile/filter')
 export class GetByFilterController {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessageEntity } from './message.entity';
-import { Message } from 'src/chat/domain/message';
+import { Message } from 'src/chat/domain/message/message';
 import { randomUUID } from 'crypto';
 
 @Injectable()
