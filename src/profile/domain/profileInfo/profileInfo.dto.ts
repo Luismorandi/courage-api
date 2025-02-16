@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Gender } from './profileInfo.gender';
 import { ProfileRole } from './profileInfo.roles';
-import { ProfileStatus, QuestionStatu } from './profileInfo.status';
+import { ProfileStatus } from './profileInfo.status';
 import { ProfileTypes } from './profileInfo.types';
 import { Details } from '../profileDetails/details';
 
