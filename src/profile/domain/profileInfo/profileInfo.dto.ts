@@ -70,19 +70,6 @@ export class CreateProfile {
     photos: string[];
 }
 
-export class CreateQuestionInput {
-    @IsEnum(QuestionStatu, { message: 'Invalid status' })
-    status: string;
-
-    @IsString()
-    value: string;
-}
-
-export class CreateQuestionsInput {
-    @IsObject()
-    questions: CreateProfileInput[];
-}
-
 export interface INewProfile {
     id: string;
     userId: string;

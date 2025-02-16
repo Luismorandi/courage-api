@@ -6,8 +6,12 @@ export class QuestionsEntity {
     id: string;
     @Column()
     type: string;
-    @Column()
+    @Column({ default: 'ACTIVE' })
     status: string;
     @Column()
     value: string;
+    @Column()
+    created_at: Date;
+    @Column()
+    updated_at: Date;
 }

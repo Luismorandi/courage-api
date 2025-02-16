@@ -1,21 +1,15 @@
-// import { Injectable } from '@nestjs/common';
-// import { AppLogger } from 'src/shared/logger/logger.service';
+import { Injectable } from '@nestjs/common';
 
-// import { ProfilePostgreRepository } from 'src/profile/infrastructure/postgre/profile/profile.postgre.repository';
-// import { Question } from 'src/profile/domain/questions/questions.domain';
-// import { CreateQuestionsInput } from 'src/profile/domain/profile/profile.dto';
+import { Question } from 'src/profile/domain/questions/questions.domain';
+import { CreateQuestionsInput } from 'src/profile/domain/questions/questions.dto';
+import { QuestionRepositoryService } from 'src/profile/infrastructure/question.repository';
 
-// @Injectable()
-// export class CreateQuestionsUseCase {
-//     private readonly logger: AppLogger = new AppLogger().withCtx(
-//         CreateQuestionsUseCase.name,
-//     );
-//     constructor(private readonly profileRepository: ProfilePostgreRepository) {}
+@Injectable()
+export class CreateQuestionsUseCase {
+    constructor(private readonly questionRepository: QuestionRepositoryService) {}
 
-//     async exec(input: CreateQuestionsInput): Promise<Question[]> {
-
-//         const questions = await this.profileRepository.
-
-//         return profiles;
-//     }
-// }
+    async exec(input: CreateQuestionsInput): Promise<Question[]> {
+        const questions = await this.questionRepository.createMany(input);
+        return questions;
+    }
+}
