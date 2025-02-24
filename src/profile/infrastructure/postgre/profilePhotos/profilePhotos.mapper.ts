@@ -12,7 +12,7 @@ export class ProfilePhotosMapper {
                 url: photo,
                 status: 'ACTIVE',
                 type: 'PROFILE_PHOTO',
-                profile_id: profile.getUserId(),
+                profile_id: profile.getId(),
                 added_at: new Date(),
             }));
         }

@@ -26,6 +26,14 @@ export class CreateProfileInput {
     @IsNotEmpty()
     userId: string;
 
+    @IsString()
+    @IsNotEmpty()
+    firstName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    lastName: string;
+
     @IsEnum(Gender, { message: 'Invalid gender' })
     gender: string;
 
@@ -56,6 +64,13 @@ export class CreateProfile {
     @IsNotEmpty()
     userId: string;
 
+    @IsString()
+    @IsNotEmpty()
+    firstName: string;
+    @IsString()
+    @IsNotEmpty()
+    lastName: string;
+
     @IsEnum(Gender, { message: 'Invalid gender' })
     gender: string;
 
@@ -80,6 +95,8 @@ export interface INewProfile {
     type: ProfileTypes;
     gender: Gender;
     age: number;
+    firstName: string;
+    lastName: string;
     details?: Record<Details, string>;
     photos: string[];
 }

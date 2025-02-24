@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { IQuestionRepository } from '../domain/questions/question.repository';
+import {
+    FilterQuestions,
+    IQuestionRepository,
+} from '../domain/questions/question.repository';
 import { QuestionPostgreRepository } from './postgre/questions/question.postgre.repository';
 import { Question } from '../domain/questions/questions.domain';
 import { CreateQuestionsInput } from '../domain/questions/questions.dto';
@@ -12,6 +15,11 @@ export class QuestionRepositoryService implements IQuestionRepository {
     async createMany(input: CreateQuestionsInput): Promise<Question[]> {
         const questions = await this.questionRepository.save(input);
 
+        return questions;
+    }
+
+    async getMany(input: FilterQuestions): Promise<Question[]> {
+        const questions = await this.questionRepository.getMany(input);
         return questions;
     }
 }

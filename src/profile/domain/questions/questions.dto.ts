@@ -3,7 +3,13 @@ import { Details } from '../profileDetails/details';
 import { QuestionStatu } from '../profileInfo/profileInfo.status';
 
 export class CreateQuestionsInput {
+    @IsNotEmpty()
     questions: CreateQuestionInput[];
+}
+
+export class GetQuestionsInput {
+    @IsNotEmpty()
+    types: Details[];
 }
 
 export class CreateQuestionInput {

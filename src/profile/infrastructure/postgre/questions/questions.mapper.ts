@@ -5,6 +5,8 @@ import { QuestionsEntity } from './questions.entity';
 import { CreateQuestionInput } from 'src/profile/domain/questions/questions.dto';
 import { QuestionStatu } from 'src/profile/domain/profileInfo/profileInfo.status';
 import { Details } from 'src/profile/domain/profileDetails/details';
+import { FilterQuestions } from 'src/profile/domain/questions/question.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class QuestionsMapper {
@@ -42,5 +44,12 @@ export class QuestionsMapper {
             created_at: new Date(),
             updated_at: new Date(),
         };
+    }
+
+    buildFilter(filters: FilterQuestions): any {
+        const where: any = {};
+        if (filters?.status) where.status = filters.status;
+        if (filters?.type?.length) where.type = In(filters.type);
+        return where;
     }
 }

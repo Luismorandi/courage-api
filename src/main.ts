@@ -25,6 +25,12 @@ async function bootstrap() {
             },
         }),
     );
+
+    app.enableCors({
+        origin: '*', // o un array de orígenes permitidos
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
     app.useGlobalFilters(new GlobalExceptionFilter());
     await app.listen(process.env.PORT ?? 3000);
 }

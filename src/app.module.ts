@@ -14,6 +14,7 @@ import { ProfileDetailsEntity } from './profile/infrastructure/postgre/profileDe
 import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePhotos/profilePhotos.entity';
 import { MessageEntity } from './chat/infrastructure/postgre/message/message.entity';
 import { ChatModule } from './chat/chat.module';
+import { QuestionsEntity } from './profile/infrastructure/postgre/questions/questions.entity';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { ChatModule } from './chat/chat.module';
                 ProfileDetailsEntity,
                 ProfilePhotosEntity,
                 MessageEntity,
+                QuestionsEntity,
             ],
             synchronize: true,
         }),

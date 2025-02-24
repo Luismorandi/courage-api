@@ -15,6 +15,8 @@ export class ProfileInfo {
     private type: ProfileTypes;
     private gender: Gender;
     private age: number;
+    private firstName: string;
+    private lastName: string;
     private details?: Record<Details, string>;
 
     constructor(profile: INewProfile) {
@@ -28,6 +30,8 @@ export class ProfileInfo {
         this.gender = profile.gender;
         this.age = profile.age;
         this.details = profile.details;
+        this.firstName = profile.firstName;
+        this.lastName = profile.lastName;
     }
 
     getId(): string {
@@ -41,6 +45,12 @@ export class ProfileInfo {
 
     getAge(): number {
         return this.age;
+    }
+    getFirstName(): string {
+        return this.firstName;
+    }
+    getLastName(): string {
+        return this.lastName;
     }
 
     getUserId(): string {

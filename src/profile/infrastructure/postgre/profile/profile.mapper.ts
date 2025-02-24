@@ -23,6 +23,8 @@ export class ProfileMapper {
             status: profile.status,
             gender: profile.gender,
             age: profile.age,
+            first_name: profile.firstName,
+            last_name: profile.lastName,
         };
     }
 
@@ -37,6 +39,8 @@ export class ProfileMapper {
             status: profile.getStatus(),
             gender: profile.getGender(),
             age: profile.getAge(),
+            first_name: profile.getFirstName(),
+            last_name: profile.getLastName(),
         };
     }
     toDomain(profile: ProfileEntity): ProfileInfo {
@@ -51,6 +55,8 @@ export class ProfileMapper {
             gender: profile.gender as Gender,
             age: profile.age,
             photos: [],
+            firstName: profile.first_name,
+            lastName: profile.last_name,
         });
     }
 

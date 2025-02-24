@@ -18,6 +18,14 @@ import { ProfilePhotosMapper } from './infrastructure/postgre/profilePhotos/prof
 import { ProfilePhotosPostgreRepository } from './infrastructure/postgre/profilePhotos/profilePhotos.repository';
 import { ProfileDetailsPostgreRepository } from './infrastructure/postgre/profileDetails/profileDetails.repository';
 import { ProfileRepositoryService } from './infrastructure/profile.repository';
+import { QuestionRepositoryService } from './infrastructure/question.repository';
+import { CreateQuestionsUseCase } from './application/useCases/questions/question.createMany';
+import { QuestionsMapper } from './infrastructure/postgre/questions/questions.mapper';
+import { QuestionPostgreRepository } from './infrastructure/postgre/questions/question.postgre.repository';
+import { QuestionsEntity } from './infrastructure/postgre/questions/questions.entity';
+import { CreateManyQuestionsController } from './application/controllers/questions/question.createMany';
+import { GetManyQuestionsUseCase } from './application/useCases/questions/question.getMany';
+import { GetManyQuestionsController } from './application/controllers/questions/question.getQuestions';
 
 @Module({
     imports: [
@@ -25,6 +33,7 @@ import { ProfileRepositoryService } from './infrastructure/profile.repository';
             ProfileEntity,
             ProfileDetailsEntity,
             ProfilePhotosEntity,
+            QuestionsEntity,
         ]),
         HttpModule.register({
             timeout: 500000000,
@@ -43,11 +52,18 @@ import { ProfileRepositoryService } from './infrastructure/profile.repository';
         ProfilePhotosPostgreRepository,
         ProfileDetailsPostgreRepository,
         ProfileRepositoryService,
+        QuestionRepositoryService,
+        QuestionPostgreRepository,
+        CreateQuestionsUseCase,
+        GetManyQuestionsUseCase,
+        QuestionsMapper,
     ],
     controllers: [
         CreateProfileController,
         GetManyProfileController,
         GetByFilterController,
+        CreateManyQuestionsController,
+        GetManyQuestionsController,
     ],
 })
 export class ProfileModule {}

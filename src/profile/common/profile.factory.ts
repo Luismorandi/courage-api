@@ -21,6 +21,8 @@ export class ProfileFactory {
             age: input.age,
             details: input.profileDetails || {},
             photos: input.photos || [],
+            firstName: input.firstName,
+            lastName: input.lastName,
         });
     }
 }
