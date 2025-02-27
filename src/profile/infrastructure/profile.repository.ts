@@ -49,14 +49,12 @@ export class ProfileRepositoryService implements IProfileRepository {
     }
 
     private async getProfiles(ids: string[]): Promise<Profile[]> {
-        console.log(ids);
         const [profilesInfo, profileDetailsEntity, profilePhotosEntity] =
             await Promise.all([
                 this.profileInfo.getMany(ids),
                 this.profileDetailsRepo.getMany(ids),
                 this.profilePhotosRepo.getMany(ids),
             ]);
-        console.log(profilePhotosEntity);
 
         return this.mapProfiles(profilesInfo, profileDetailsEntity, profilePhotosEntity);
     }

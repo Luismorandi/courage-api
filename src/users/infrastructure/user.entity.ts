@@ -17,4 +17,7 @@ export class UserEntity {
 
     @Column()
     updated_at: Date;
+
+    @Column({ default: '' })
+    password: string;
 }

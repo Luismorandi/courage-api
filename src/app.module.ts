@@ -15,12 +15,13 @@ import { ProfilePhotosEntity } from './profile/infrastructure/postgre/profilePho
 import { MessageEntity } from './chat/infrastructure/postgre/message/message.entity';
 import { ChatModule } from './chat/chat.module';
 import { QuestionsEntity } from './profile/infrastructure/postgre/questions/questions.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
-            isGlobal: true, // Esto hace que las variables de entorno estén disponibles globalmente
-            envFilePath: '.env', // Ruta del archivo .env
+            isGlobal: true,
+            envFilePath: '.env',
         }),
         TypeOrmModule.forRoot({
             type: 'postgres',
@@ -45,6 +46,7 @@ import { QuestionsEntity } from './profile/infrastructure/postgre/questions/ques
         ProfileModule,
         MatchModule,
         ChatModule,
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],

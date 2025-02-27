@@ -82,8 +82,9 @@ export class UserRepository {
         try {
             return new User(
                 user.id,
-                user.last_name,
                 user.first_name,
+                user.last_name,
+                user.password,
                 user.email,
                 user.created_at,
                 user.updated_at,
@@ -101,6 +102,7 @@ export class UserRepository {
                 email: user.email,
                 first_name: user.firstName,
                 last_name: user.lastName,
+                password: user.password,
                 created_at: user.createdAt,
                 updated_at: user.updatedAt,
             };

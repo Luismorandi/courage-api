@@ -1,8 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../domain/user.domain';
-import { CreateUserInput } from '../domain/user.types';
+import { CreateUserInput, HASH_SALT } from '../domain/user.types';
 import { UserRepository } from '../infrastructure/user.repository';
 import { AppLogger } from 'src/shared/logger/logger.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,11 @@ export class UsersService {
     async create(input: CreateUserInput): Promise<User> {
         const email = input.email.toLowerCase();
         const existingUser = await this.userRepository.getByEmail(email);
+        if (existingUser) {
+            throw new ConflictException('El usuario ya existe');
+        }
+        const saltRounds = HASH_SALT;
+        const hashedPassword = await bcrypt.hash(input.password, saltRounds);
 
         if (existingUser) {
             this.logger.error(`User with email ${email} already exists.`);
@@ -22,6 +28,7 @@ export class UsersService {
             null,
             input.firstName,
             input.lastName,
+            hashedPassword,
             email,
             new Date(),
             new Date(),

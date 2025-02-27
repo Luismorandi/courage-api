@@ -36,7 +36,7 @@ import { GetManyQuestionsController } from './application/controllers/questions/
             QuestionsEntity,
         ]),
         HttpModule.register({
-            timeout: 500000000,
+            timeout: 50000,
             maxRedirects: 5,
         }),
     ],
