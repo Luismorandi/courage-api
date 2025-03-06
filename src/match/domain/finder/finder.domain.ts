@@ -49,7 +49,7 @@ export class GenderStrategy extends Finder {
             }
 
             return await profileRepo.getProfileByFilter({
-                gender: genders as string[], // Especificamos que 'genders' será un array de strings
+                gender: genders as string[],
             });
         } catch (error) {
             throw new Error(

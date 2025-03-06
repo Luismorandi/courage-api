@@ -6,14 +6,6 @@ import { CreateUserInput } from '../domain/user.types';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
-    @Get('email/:email')
-    async getUserByEmail(@Param('email') email: string): Promise<User> {
-        const response = await this.usersService.get(email);
-        if (response instanceof Error) {
-            throw new Error(response.message);
-        }
-        return response;
-    }
 
     @Get('id/:id')
     async getById(@Param('id') id: string): Promise<User> {

@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CreateProfileUseCase } from '../../useCases/profile/profile.create';
-import { CreateProfileInput } from '../../../domain/profileInfo/profileInfo.dto';
+import { CreateProfileInput } from '../../../domain/profile/profile.dto';
 import { Profile } from 'src/profile/domain/profile/profile.domain';
 
 @Controller('profile/create')

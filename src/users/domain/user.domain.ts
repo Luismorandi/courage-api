@@ -1,5 +1,3 @@
-// src/users/domain/entities/user.entity.ts
-
 export interface UserRepository {
     get(id: string): User;
 }

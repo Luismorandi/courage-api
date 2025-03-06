@@ -3,10 +3,10 @@ export async function getResponseAI(prompt: string, creativity: number) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            model: 'mistral', // Cambia a "deepseek-chat" si lo descargaste
+            model: 'mistral',
             prompt: prompt,
             temperature: creativity,
-            stream: false, // Importante para recibir el JSON completo
+            stream: false,
         }),
     });
 

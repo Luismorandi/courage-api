@@ -18,7 +18,7 @@ export class FinderPosibleMatchInput {
     @IsDefined()
     finderName: string;
 
-    @IsOptional() // Si el argumento 'arg' es opcional, puedes marcarlo con @IsOptional
-    @IsObject() // Agrego una validación de tipo 'object' a 'arg'
-    arg: Record<string, any>; // Definir `arg` como un objeto clave-valor opcional
+    @IsOptional()
+    @IsObject()
+    arg: Record<string, any>;
 }

@@ -1,14 +1,19 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../domain/user.domain';
 import { CreateUserInput, HASH_SALT } from '../domain/user.types';
-import { UserRepository } from '../infrastructure/user.repository';
+import { UserRepository } from '../infrastructure/postgre/user.repository';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import * as bcrypt from 'bcrypt';
+import { ProfileRestRepository } from '../infrastructure/rest/profile.rest.repository';
+import { defaultProfile } from '../domain/profile.domain';
 
 @Injectable()
 export class UsersService {
     private readonly logger: AppLogger = new AppLogger().withCtx(UsersService.name);
-    constructor(private readonly userRepository: UserRepository) {}
+    constructor(
+        private readonly userRepository: UserRepository,
+        private readonly profileRepository: ProfileRestRepository,
+    ) {}
 
     async create(input: CreateUserInput): Promise<User> {
         const email = input.email.toLowerCase();
@@ -34,7 +39,11 @@ export class UsersService {
             new Date(),
         );
 
-        await this.userRepository.save(newUser);
+        const user = await this.userRepository.save(newUser);
+        defaultProfile.firstName = user.firstName;
+        defaultProfile.lastName = user.lastName;
+
+        await this.profileRepository.create(defaultProfile, user);
 
         return newUser;
     }

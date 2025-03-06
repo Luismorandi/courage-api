@@ -7,27 +7,25 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(
         new ValidationPipe({
-            transform: true, // Transforma el objeto a una instancia de la clase
-            whitelist: true, // Elimina propiedades no definidas en el DTO
-            forbidNonWhitelisted: true, // Lanza un error si hay propiedades no permitidas
+            transform: true,
+            whitelist: true,
+            forbidNonWhitelisted: true,
             exceptionFactory: (errors) => {
-                // Aseguramos que 'errors' sea un array de objetos que tengan la propiedad 'constraints'
                 const messages = errors.flatMap((err) => {
                     if (err.constraints) {
-                        return Object.values(err.constraints); // Obtener los mensajes de las restricciones falladas
+                        return Object.values(err.constraints);
                     } else {
-                        return [`Property ${err.property} is invalid`]; // Mensaje por defecto si no hay 'constraints'
+                        return [`Property ${err.property} is invalid`];
                     }
                 });
 
-                // Retornamos una excepción con todos los mensajes de error
                 return new BadRequestException(messages);
             },
         }),
     );
 
     app.enableCors({
-        origin: '*', // o un array de orígenes permitidos
+        origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
     });

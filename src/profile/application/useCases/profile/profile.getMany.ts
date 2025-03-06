@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { AppLogger } from 'src/shared/logger/logger.service';
 
 import { Profile } from 'src/profile/domain/profile/profile.domain';
-import { ProfileRepositoryService } from 'src/profile/infrastructure/profile.repository';
+import { IProfileRepository } from 'src/profile/domain/profile/profile.repository';
+import { EnumProfileRepository } from 'src/profile/domain/profile/profile.enum';
 
 @Injectable()
 export class GetManyProfileUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(
         GetManyProfileUseCase.name,
     );
-    constructor(private readonly profileRepository: ProfileRepositoryService) {}
+    constructor(
+        @Inject(EnumProfileRepository.PROFILE_REPOSITORY)
+        private readonly profileRepository: IProfileRepository,
+    ) {}
 
     async exec(ids: string[]): Promise<Profile[]> {
         const profiles = await this.profileRepository.getMany(ids);

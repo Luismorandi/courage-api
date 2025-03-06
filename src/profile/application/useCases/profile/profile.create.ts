@@ -1,32 +1,35 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateProfileInput } from '../../../domain/profileInfo/profileInfo.dto';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateProfileInput } from '../../../domain/profile/profile.dto';
 import { AppLogger } from 'src/shared/logger/logger.service';
-import { UserRestRepository } from 'src/profile/infrastructure/rest/user.rest.repository';
-import { ProfileRepositoryService } from 'src/profile/infrastructure/profile.repository';
+import { IProfileRepository } from 'src/profile/domain/profile/profile.repository';
 import { Profile } from 'src/profile/domain/profile/profile.domain';
-
+import { IUserRepository } from 'src/profile/domain/user/user.domain';
+import { EnumProfileRepository } from 'src/profile/domain/profile/profile.enum';
 @Injectable()
 export class CreateProfileUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(
         CreateProfileUseCase.name,
     );
     constructor(
-        private readonly profileRepositoryService: ProfileRepositoryService,
-
-        private readonly userService: UserRestRepository,
+        @Inject(EnumProfileRepository.PROFILE_REPOSITORY)
+        private readonly profileRepository: IProfileRepository,
+        @Inject(EnumProfileRepository.USER_REPOSITORY)
+        private readonly userRepository: IUserRepository,
     ) {}
 
     async exec(input: CreateProfileInput): Promise<Profile> {
-        const user = await this.userService.getUserById(input.userId);
+        const user = await this.userRepository.getUserById(input.userId);
         if (!user) {
-            this.logger.error(`User with id ${input.userId} dont exist.`);
-            throw new ConflictException(`User with id ${input.userId} dont exist.`);
+            this.logger.error(`User with id ${input.userId} doesn't exist.`);
+            throw new NotFoundException(`User with id ${input.userId} doesn't exist.`);
         }
 
-        const profile = await this.profileRepositoryService.create(input);
-        if (profile instanceof Error) {
-            this.logger.error(profile.message);
-            throw new Error(profile.message);
+        const profile = await this.profileRepository.create(input);
+        if (!profile) {
+            this.logger.error(`profile with userId ${input.userId}`, profile);
+            throw new NotFoundException(
+                `Profile with userId ${input.userId} doesn't exist.`,
+            );
         }
 
         return profile;

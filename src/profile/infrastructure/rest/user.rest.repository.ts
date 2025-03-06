@@ -1,5 +1,5 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { IUser, IUserRepository } from 'src/profile/domain/user/user.domain';
@@ -11,7 +11,7 @@ export class UserRestRepository implements IUserRepository {
         private readonly configService: ConfigService,
     ) {}
 
-    getUrl(): string {
+    private getUrl(): string {
         return this.configService.get<string>('USER_URL') as string;
     }
 
