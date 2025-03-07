@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './users/infrastructure/user.entity';
+import { UserEntity } from './users/infrastructure/postgre/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { SharedModule } from './shared/shared.module';
 import { ProfileModule } from './profile/profile.module';

@@ -7,7 +7,7 @@ import {
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../domain/user.domain';
-import { UserEntity } from '../user.entity';
+import { UserEntity } from './user.entity';
 import { randomUUID } from 'crypto';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { IUserRepository } from 'src/users/domain/user.repository';

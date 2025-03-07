@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './infrastructure/user.entity';
+import { UserEntity } from './infrastructure/postgre/user.entity';
 import { UserRepository } from './infrastructure/postgre/user.repository';
 import { ProfileRestRepository } from './infrastructure/rest/profile.rest.repository';
 import { HttpModule } from '@nestjs/axios';
@@ -12,6 +12,7 @@ import { GetManyUsersController } from './application/controller/users.getMany';
 import { GetManyUsersUseCase } from './application/useCases/users.getMant';
 import { CreateUserController } from './application/controller/users.create';
 import { CreateUserUseCase } from './application/useCases/users.create';
+import { EnumProfileRepository } from 'src/profile/domain/profile/profile.enum';
 
 @Module({
     imports: [
@@ -23,10 +24,13 @@ import { CreateUserUseCase } from './application/useCases/users.create';
     ],
     providers: [
         {
-            provide: 'IUserRepository',
+            provide: EnumProfileRepository.USER_REPOSITORY,
             useClass: UserRepository,
         },
-        { provide: 'IProfileRepository', useClass: ProfileRestRepository },
+        {
+            provide: EnumProfileRepository.PROFILE_REPOSITORY,
+            useClass: ProfileRestRepository,
+        },
 
         GetUserByEmailUseCase,
         GetUserByIdUseCase,
