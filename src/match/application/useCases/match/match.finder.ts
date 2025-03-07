@@ -1,19 +1,22 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
-import { ProfileRestRepository } from 'src/match/infrastructure/rest/profile.rest.repository';
 import { ContextFinder, FactoryStrategy } from 'src/match/domain/finder/finder.domain';
 import { IProfile } from 'src/match/domain/profile/profile.domain';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { AI } from 'src/match/infrastructure/rest/ai.rest.respository';
+import { IProfileRepository } from 'src/match/domain/profile/profile.repository';
+import { EnumMatchRepository } from 'src/match/domain/match.enum';
 
 @Injectable()
 export class FinderPosibleMatchUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(
         FinderPosibleMatchUseCase.name,
     );
+
     constructor(
-        private readonly profileRepository: ProfileRestRepository,
-        private readonly aiRepository: AI,
+        @Inject(EnumMatchRepository.PROFILE_REPOSITORY)
+        private profileRepository: IProfileRepository,
+        @Inject(EnumMatchRepository.AI_REPOSITORY) private aiRepository: AI,
     ) {}
 
     async exec(arg: Record<string, any>, name: string): Promise<IProfile[]> {

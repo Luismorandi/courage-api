@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MatchEntity } from './match.entity';
@@ -19,7 +19,9 @@ export class MatchPostgreRepository implements IMatchRepository {
             await this.matchRepository.save(matchRepository);
             return match;
         } catch (err) {
-            throw new Error(`Failed to save match: ${(err as Error).message}`);
+            throw new InternalServerErrorException(
+                `Failed to save match: ${(err as Error).message}`,
+            );
         }
     }
 
@@ -33,7 +35,7 @@ export class MatchPostgreRepository implements IMatchRepository {
                 created_at: match.getCreatedAt(),
             };
         } catch (err) {
-            throw new Error(
+            throw new InternalServerErrorException(
                 `Failed to map match domain to entity: ${(err as Error).message}`,
             );
         }

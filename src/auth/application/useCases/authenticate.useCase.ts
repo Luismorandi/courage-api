@@ -1,7 +1,13 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRestRepository } from 'src/auth/infrastructure/rest/user.rest.repository';
+import {
+    ConflictException,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { IUserRepository } from 'src/auth/domain/user.domain';
+import { EnumAuthRepository } from 'src/auth/domain/auth.enum';
 export type AuthInput = { username: string; password: string };
 export type SingInData = { userId: string; username: string };
 export type AuthResult = { access_token: string; userId: string; username: string };
@@ -9,7 +15,8 @@ export type AuthResult = { access_token: string; userId: string; username: strin
 @Injectable()
 export class AuthenticateUseCase {
     constructor(
-        private readonly userService: UserRestRepository,
+        @Inject(EnumAuthRepository.USER_REPOSITORY)
+        private userRepository: IUserRepository,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -23,7 +30,7 @@ export class AuthenticateUseCase {
     }
 
     private async validateUser(input: AuthInput): Promise<SingInData | null> {
-        const user = await this.userService.getUserByEmail(input.username);
+        const user = await this.userRepository.getUserByEmail(input.username);
         if (user instanceof Error) {
             throw new ConflictException('Error while get user');
         }

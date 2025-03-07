@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { UserRestRepository } from './infrastructure/rest/user.rest.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { EnumAuthRepository } from './domain/auth.enum';
 
 @Module({
     imports: [
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
             envFilePath: '.env',
         }),
         HttpModule.register({
-            timeout: 50000,
+            timeout: 5000,
             maxRedirects: 5,
         }),
         JwtModule.register({
@@ -22,7 +23,10 @@ import { ConfigModule } from '@nestjs/config';
             signOptions: { expiresIn: '1d' },
         }),
     ],
-    providers: [AuthenticateUseCase, UserRestRepository],
+    providers: [
+        { provide: EnumAuthRepository.USER_REPOSITORY, useClass: UserRestRepository },
+        AuthenticateUseCase,
+    ],
     controllers: [LoginController],
 })
 export class AuthModule {}

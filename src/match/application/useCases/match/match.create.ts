@@ -1,17 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMatchInput } from '../../../domain/match.dto';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { Match } from 'src/match/domain/match/match.domain';
-import { MatchPostgreRepository } from 'src/match/infrastructure/postgre/match/match.postgre.repository';
 import { MATCH_COUNT } from 'src/match/domain/match/matchCount.domain';
-import { ProfileRestRepository } from 'src/match/infrastructure/rest/profile.rest.repository';
+import { IProfileRepository } from 'src/match/domain/profile/profile.repository';
+import { IMatchRepository } from 'src/match/domain/match/match.repository';
+import { EnumMatchRepository } from 'src/match/domain/match.enum';
 
 @Injectable()
 export class CreateMatchUseCase {
     private readonly logger: AppLogger = new AppLogger().withCtx(CreateMatchUseCase.name);
     constructor(
-        private readonly matchRepository: MatchPostgreRepository,
-        private readonly profileRepository: ProfileRestRepository,
+        @Inject(EnumMatchRepository.PROFILE_REPOSITORY)
+        private profileRepository: IProfileRepository,
+        @Inject(EnumMatchRepository.MATCH_REPOSITORY)
+        private matchRepository: IMatchRepository,
     ) {}
 
     async create(input: CreateMatchInput): Promise<Match> {

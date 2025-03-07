@@ -7,15 +7,20 @@ import { ChatGateway } from './application/gateway/chat.gatway';
 import { MessageFactory } from './common/message.factory';
 import { MessagePostgreRepository } from './infrastructure/postgre/message/message.repository';
 import { MessageMapper } from './infrastructure/postgre/message/message.mapper';
+import { EnumChatRepository } from './domain/chat.enum';
 
 @Module({
     imports: [TypeOrmModule.forFeature([MessageEntity])],
     providers: [
+        {
+            provide: EnumChatRepository.MESSAGE_REPOSITORY,
+            useClass: MessagePostgreRepository,
+        },
+
         CreateMessageUseCase,
         GetMessagesUseCase,
         ChatGateway,
         MessageFactory,
-        MessagePostgreRepository,
         MessageMapper,
     ],
 })

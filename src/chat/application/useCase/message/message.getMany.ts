@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GetMessagesInput } from 'src/chat/domain/message/message.dto';
 import { Message } from 'src/chat/domain/message/message';
-import { MessagePostgreRepository } from 'src/chat/infrastructure/postgre/message/message.repository';
+import { IMessageRepository } from 'src/chat/domain/message/message.repository';
+import { EnumChatRepository } from 'src/chat/domain/chat.enum';
 
 @Injectable()
 export class GetMessagesUseCase {
-    constructor(private readonly messageRepository: MessagePostgreRepository) {}
-
+    constructor(
+        @Inject(EnumChatRepository.MESSAGE_REPOSITORY)
+        private messageRepository: IMessageRepository,
+    ) {}
     async exec(input: GetMessagesInput): Promise<Message[]> {
         const messages = await this.messageRepository.getMessages(
             input.receiverId,

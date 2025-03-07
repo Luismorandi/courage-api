@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MessageEntity } from './message.entity';
@@ -22,7 +22,9 @@ export class MessagePostgreRepository implements IMessageRepository {
 
             return message;
         } catch (err) {
-            throw new Error(`Failed to save message: ${(err as Error).message}`);
+            throw new InternalServerErrorException(
+                `Failed to save message: ${(err as Error).message}`,
+            );
         }
     }
 
@@ -40,7 +42,9 @@ export class MessagePostgreRepository implements IMessageRepository {
                 this.messageMapper.toDomain(messageEntity),
             );
         } catch (err) {
-            throw new Error(`Failed to get messages: ${(err as Error).message}`);
+            throw new InternalServerErrorException(
+                `Failed to get messages: ${(err as Error).message}`,
+            );
         }
     }
 }

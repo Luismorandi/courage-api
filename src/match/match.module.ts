@@ -10,6 +10,7 @@ import { ProfileRestRepository } from './infrastructure/rest/profile.rest.reposi
 import { FinderPosibleMatchUseCase } from './application/useCases/match/match.finder';
 import { FinderPosibleMatchController } from './application/controllers/match.finderPosibleMatch';
 import { AI } from './infrastructure/rest/ai.rest.respository';
+import { EnumMatchRepository } from './domain/match.enum';
 
 @Module({
     imports: [
@@ -20,11 +21,18 @@ import { AI } from './infrastructure/rest/ai.rest.respository';
         }),
     ],
     providers: [
+        {
+            provide: EnumMatchRepository.MATCH_REPOSITORY,
+            useClass: MatchPostgreRepository,
+        },
+        {
+            provide: EnumMatchRepository.PROFILE_REPOSITORY,
+            useClass: ProfileRestRepository,
+        },
+        { provide: EnumMatchRepository.AI_REPOSITORY, useClass: AI },
+
         CreateMatchUseCase,
         FinderPosibleMatchUseCase,
-        MatchPostgreRepository,
-        ProfileRestRepository,
-        AI,
     ],
     controllers: [CreateMatchController, FinderPosibleMatchController],
 })
