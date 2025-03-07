@@ -5,23 +5,21 @@ import { IUserRepository } from 'src/users/domain/user.repository';
 import { EnumUserRepository } from 'src/users/domain/user.types';
 
 @Injectable()
-export class GetUserByEmailUseCase {
-    private readonly logger: AppLogger = new AppLogger().withCtx(
-        GetUserByEmailUseCase.name,
-    );
+export class GetAllUsersUseCase {
+    private readonly logger: AppLogger = new AppLogger().withCtx(GetAllUsersUseCase.name);
 
     constructor(
         @Inject(EnumUserRepository.USER_REPOSITORY)
         private userRepository: IUserRepository,
     ) {}
 
-    async exec(email: string): Promise<User> {
-        const user = await this.userRepository.getByEmail(email);
+    async exec(): Promise<User[]> {
+        const users = await this.userRepository.getAll();
 
-        if (!user) {
-            this.logger.error(`User with email ${email} dont exist.`);
-            throw new NotFoundException(`User with email ${email} dont exist.`);
+        if (users.length === 0) {
+            this.logger.error(`Users dont exist`);
+            throw new NotFoundException(`Users dont exist`);
         }
-        return user;
+        return users;
     }
 }

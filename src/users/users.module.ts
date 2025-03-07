@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './application/users.service';
-import { UsersController } from './application/users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './infrastructure/user.entity';
 import { UserRepository } from './infrastructure/postgre/user.repository';
 import { ProfileRestRepository } from './infrastructure/rest/profile.rest.repository';
 import { HttpModule } from '@nestjs/axios';
 import { GetUserByEmailUseCase } from './application/useCases/users.getUserByEmail';
-import { UserRepositoryService } from './infrastructure/user.repositorys';
 import { GetUserByEmailController } from './application/controller/users.getByEmail';
+import { GetUserByIdController } from './application/controller/users.getById';
+import { GetUserByIdUseCase } from './application/useCases/users.getUserById';
+import { GetManyUsersController } from './application/controller/users.getMany';
+import { GetManyUsersUseCase } from './application/useCases/users.getMant';
+import { CreateUserController } from './application/controller/users.create';
+import { CreateUserUseCase } from './application/useCases/users.create';
 
 @Module({
     imports: [
@@ -23,13 +26,18 @@ import { GetUserByEmailController } from './application/controller/users.getByEm
             provide: 'IUserRepository',
             useClass: UserRepository,
         },
+        { provide: 'IProfileRepository', useClass: ProfileRestRepository },
 
-        UsersService,
-        UserRepository,
-        ProfileRestRepository,
         GetUserByEmailUseCase,
-        UserRepositoryService,
+        GetUserByIdUseCase,
+        GetManyUsersUseCase,
+        CreateUserUseCase,
     ],
-    controllers: [UsersController, GetUserByEmailController],
+    controllers: [
+        GetUserByEmailController,
+        GetUserByIdController,
+        GetManyUsersController,
+        CreateUserController,
+    ],
 })
 export class UsersModule {}
